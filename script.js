@@ -24,6 +24,29 @@ document.addEventListener('keydown', event => {
 });
 document.addEventListener('click', event => { if (!header.contains(event.target)) closeMenu(); });
 window.matchMedia('(min-width: 761px)').addEventListener('change', closeMenu);
+let navigationUntil = 0;
+// O destino alinha sua borda ao topo. O padding da seção protege o conteúdo do header.
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+  link.addEventListener('click', event => {
+    const hash = link.getAttribute('href');
+    const target = document.getElementById(hash.slice(1));
+    if (!target) return;
+    event.preventDefault();
+    closeMenu();
+    navigationUntil = performance.now() + (reducedMotion.matches ? 100 : 1500);
+    header.classList.remove('hidden');
+    if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+    target.focus({ preventScroll: true });
+    history.pushState(null, '', hash);
+    window.scrollTo({
+      top: Math.max(0, target.getBoundingClientRect().top + window.scrollY),
+      behavior: reducedMotion.matches ? 'instant' : 'smooth'
+    });
+  });
+});
+['wheel', 'touchstart'].forEach(type => window.addEventListener(type, () => {
+  navigationUntil = 0;
+}, { passive: true }));
 let previousY = window.scrollY;
 let ticking = false;
 window.addEventListener('scroll', () => {
@@ -33,7 +56,7 @@ window.addEventListener('scroll', () => {
     const y = Math.max(0, window.scrollY);
     updateProgress();
     if (Math.abs(y - previousY) > 5 || y < 90) {
-      header.classList.toggle('hidden', y > 90 && y > previousY && toggle.getAttribute('aria-expanded') !== 'true' && !header.contains(document.activeElement));
+      header.classList.toggle('hidden', performance.now() > navigationUntil && y > 90 && y > previousY && toggle.getAttribute('aria-expanded') !== 'true' && !header.contains(document.activeElement));
       previousY = y;
     }
     ticking = false;
@@ -44,7 +67,7 @@ header.addEventListener('focusin', () => header.classList.remove('hidden'));
 const sections = [...document.querySelectorAll('main .section')];
 const revealElements = new Set(document.querySelectorAll('.service, .steps article, .care-list article, .about-photo, .work-visual'));
 sections.forEach(section => {
-  section.querySelectorAll('.eyebrow, h2, .section-text, .text-link, .address-line, details, .final-cta .button, .final-cta .phone').forEach(element => revealElements.add(element));
+  section.querySelectorAll('.eyebrow, h2, .section-text, .text-link, .address-line, details, .button, .phone').forEach(element => revealElements.add(element));
 });
 document.querySelectorAll('.reveal').forEach(element => {
   if (!revealElements.has(element)) element.classList.remove('reveal');
@@ -130,3 +153,76 @@ function updateProgress() {
 updateProgress();
 window.addEventListener('resize', updateProgress, { passive: true });
 document.querySelector('#year').textContent = String(new Date().getFullYear());
+
+
+// Carrossel leve com navegação, toque, indicadores e autoplay retomado após interação.
+const slider = document.querySelector('.photo-slider');
+if (slider) {
+  const track = slider.querySelector('.photo-track');
+  const slides = [...track.querySelectorAll('.photo-slide')];
+  const dots = [...slider.querySelectorAll('.slider-dots button')];
+  const controls = slider.querySelector('.slider-controls');
+  const pauseButton = slider.querySelector('.slider-pause');
+  controls.hidden = false;
+  let current = 0;
+  let timer;
+  let paused = false;
+  let hovered = false;
+  let focused = false;
+  let onscreen = false;
+  let scrollingFrame = false;
+  function restart() {
+    clearInterval(timer);
+    if (paused || hovered || focused || !onscreen || document.hidden || reducedMotion.matches) return;
+    timer = setInterval(() => go(current + 1, false), 4800);
+  }
+  function go(index, interaction = true) {
+    current = (index + slides.length) % slides.length;
+    track.scrollTo({ left: current * track.clientWidth, behavior: reducedMotion.matches ? 'instant' : 'smooth' });
+    if (interaction) restart();
+  }
+  function updateDots() {
+    current = Math.max(0, Math.min(slides.length - 1, Math.round(track.scrollLeft / (track.clientWidth || 1))));
+    dots.forEach((dot, index) => dot.setAttribute('aria-pressed', String(index === current)));
+  }
+  slider.querySelector('.slider-prev').addEventListener('click', () => go(current - 1));
+  slider.querySelector('.slider-next').addEventListener('click', () => go(current + 1));
+  dots.forEach((dot, index) => dot.addEventListener('click', () => go(index)));
+  pauseButton.addEventListener('click', () => {
+    paused = !paused;
+    pauseButton.setAttribute('aria-pressed', String(paused));
+    pauseButton.setAttribute('aria-label', paused ? 'Retomar reprodução automática' : 'Pausar reprodução automática');
+    pauseButton.textContent = paused ? '▶' : 'Ⅱ';
+    restart();
+  });
+  track.addEventListener('scroll', () => {
+    if (scrollingFrame) return;
+    scrollingFrame = true;
+    requestAnimationFrame(() => { updateDots(); scrollingFrame = false; });
+  }, { passive: true });
+  track.addEventListener('keydown', event => {
+    if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+    event.preventDefault();
+    go(current + (event.key === 'ArrowRight' ? 1 : -1));
+  });
+  track.addEventListener('pointerup', restart);
+  track.addEventListener('touchend', restart, { passive: true });
+  slider.addEventListener('mouseenter', () => { hovered = true; restart(); });
+  slider.addEventListener('mouseleave', () => { hovered = false; restart(); });
+  slider.addEventListener('focusin', () => { focused = true; restart(); });
+  slider.addEventListener('focusout', event => {
+    if (!slider.contains(event.relatedTarget)) { focused = false; restart(); }
+  });
+  document.addEventListener('visibilitychange', restart);
+  reducedMotion.addEventListener('change', restart);
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(entries => {
+      onscreen = entries[0].isIntersecting;
+      restart();
+    }, { threshold: 0.15 }).observe(slider);
+  } else { onscreen = true; restart(); }
+  window.addEventListener('resize', () => {
+    track.scrollTo({ left: current * track.clientWidth, behavior: 'instant' });
+    updateDots();
+  }, { passive: true });
+}

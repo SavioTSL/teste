@@ -57,3 +57,33 @@
 @media(prefers-reduced-motion:no-preference){.scroll-cue>span{animation:scroll-nudge 2.6s ease-in-out infinite}.final-cta:after{animation:cta-orbit 18s ease-in-out infinite alternate}@keyframes scroll-nudge{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}@keyframes cta-orbit{from{transform:translate(0,0)}to{transform:translate(-35px,-25px)}}}
 @media(prefers-reduced-motion:reduce){.title-word,.motion .animated-title .title-word{opacity:1;transform:none}.about-photo:hover img,.work-visual:hover .work-photo img,.steps article:hover{transform:none}.button:before{display:none}}
 @media(max-width:760px){.section:not(.hero){min-height:auto}.title-word{max-width:100%}.motion .reveal{transform:translateY(20px)}}
+
+/* Âncoras: a seção começa no topo, com conteúdo abaixo do header. */
+html{scroll-padding-top:0}.section{scroll-margin-top:0}
+@media(min-width:761px){.section:not(.hero){align-items:flex-start;padding-top:max(135px,12svh)}.services,.process{justify-content:flex-start}.about-photo{align-self:flex-start}.final-cta{align-items:center!important;justify-content:center}}
+@media(max-width:760px){html{scroll-padding-top:0}.section:not(.hero){padding-top:108px}}
+/* Abertura breve com a identidade existente. */
+.intro{gap:24px;background:radial-gradient(circle at center,#14394a,#07151e 65%)}
+.intro .logo-crop{width:90px;height:90px;box-shadow:0 0 40px #39bff526}
+.intro .logo-crop img{width:279.9px;left:-94.5px;top:-89.1px}
+.intro-name small{display:block;font-size:8px;letter-spacing:.24em;color:#8aabbc;margin-top:10px}
+@media(prefers-reduced-motion:no-preference){.intro .logo-crop{animation:logo-arrive 1s var(--ease) both}.intro-name{animation:intro-name-arrive .8s .15s var(--ease) both}@keyframes logo-arrive{from{opacity:0;transform:scale(.86)}to{opacity:1;transform:scale(1)}}@keyframes intro-name-arrive{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}}
+/* Carrossel nativo com scroll snap: sem dependências externas. */
+.photo-slider{isolation:isolate;overflow:hidden;background:#0a2736}
+.photo-track{display:flex;width:100%;height:100%;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.photo-track::-webkit-scrollbar{display:none}
+.photo-slide{flex:0 0 100%;min-width:0;height:100%;margin:0;position:relative;scroll-snap-align:start}
+.photo-slide img{width:100%;height:100%;object-fit:cover}
+.work-visual:hover .photo-slide img{transform:none}
+.photo-slide figcaption{top:10px;bottom:auto;right:10px;left:auto;max-width:calc(100% - 20px);line-height:1.6}
+.slider-controls{position:absolute;top:45px;left:12px;right:12px;display:flex;align-items:center;gap:10px;z-index:3}
+.slider-controls[hidden]{display:none}
+.slider-controls button{display:grid;place-items:center;cursor:pointer;background:#071b2bd9;border:1px solid #ffffff45;color:white;border-radius:50%;width:34px;height:34px;padding:0;transition:background .25s,transform .25s}
+.slider-controls button:hover{background:#075175;transform:scale(1.06)}
+.slider-controls svg{width:18px;height:18px}.slider-prev svg{transform:rotate(180deg)}
+.slider-dots{display:flex;align-items:center;gap:7px;background:#071b2bd9;border:1px solid #ffffff30;border-radius:20px;padding:0 5px}
+.slider-dots button{width:28px;height:30px;border:0;background:transparent;border-radius:0;position:relative}
+.slider-dots button:before{content:'';width:6px;height:6px;border-radius:50%;background:#c5d4dd}
+.slider-dots button[aria-pressed=true]:before{background:#5ad2ff;box-shadow:0 0 8px #5ad2ff70}
+.slider-pause{margin-left:auto;font-size:12px}
+@media(max-width:760px){.intro{gap:16px}.intro .logo-crop{width:70px;height:70px}.intro .logo-crop img{width:217.7px;left:-73.5px;top:-69.3px}.intro>span:last-child{font-size:10px}.intro-name small{font-size:7px}.slider-controls{top:52px;gap:6px}.slider-controls button{width:32px;height:32px}.slider-dots{gap:0}.slider-dots button{width:23px;height:30px}}
