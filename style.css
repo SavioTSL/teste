@@ -15,3 +15,45 @@
 @media(max-width:1050px) and (min-width:761px){.hero-copy{width:90%}.hero h1{font-size:7.8vw}.hero-photo>img{height:100%;object-position:58% center}.about-photo img{height:500px}.work-visual .social-card{width:88%}.care-list{padding:10px 22px}}
 @media(max-width:760px){.header{padding:15px 20px;padding-top:max(15px,env(safe-area-inset-top))}.hero{min-height:100svh;padding:155px 24px 115px;justify-content:center;gap:0}.hero-copy{width:100%;max-width:none}.hero-photo{position:absolute;inset:0;width:100%;height:100%;margin:0;max-width:none;align-self:auto}.hero-photo>img{width:100%;height:100%;aspect-ratio:auto;object-position:62% center}.hero-photo:after{background:linear-gradient(90deg,#041722e0,#04172283),linear-gradient(0deg,#041722e8,transparent 65%)}.hero h1{font-size:clamp(3.15rem,12vw,5.3rem);line-height:1.04;margin-bottom:26px}.hero .eyebrow{font-size:8px;letter-spacing:.15em;gap:4px}.hero .lead{font-size:15px;max-width:340px;color:#e3edf2}.hero .actions{gap:12px}.hero .primary,.hero .secondary{font-size:12px;min-height:52px;padding:15px 18px}.hero-note{font-size:7px;letter-spacing:.12em;gap:9px;margin-top:28px}.hero-photo figcaption{bottom:18px;right:24px;font-size:8px;background:transparent;padding:0;color:#a5bdca}.scroll-cue{bottom:43px}.ticker{font-size:9px;padding:24px;gap:20px;letter-spacing:.15em}.about{gap:45px}.about h2{font-size:clamp(2.65rem,10vw,3.8rem)}.about-photo img{height:auto;aspect-ratio:4/3}.about-photo:before{top:-10px;left:-10px}.service{padding:25px}.service-photo{margin:-25px -25px 24px}.service-photo img{height:auto;aspect-ratio:3/2}.service:last-child{min-height:340px}.care-list{padding:8px 24px}.care-background{object-position:45% center}.care:before{background:linear-gradient(#041c2ae6,#042a3cf0)}.care-caption{right:24px;bottom:18px;font-size:8px}.work-visual{min-height:490px;margin-top:10px}.work-photo{height:340px;width:90%}.work-visual .social-card{width:80%;min-height:270px;padding:22px;box-shadow:10px 10px 0 #34bcea}.work-visual .social-bottom{font-size:7px}.process:before{font-size:300px;top:60px;right:-40px}.steps article>span{font-size:32px;margin-bottom:26px}.final-cta h2{font-size:clamp(2.75rem,10vw,4.4rem)}.final-cta .primary{font-size:12px}.final-cta{padding-top:100px;padding-bottom:100px}}
 @media(prefers-reduced-motion:no-preference){.hero-photo>img{animation:hero-settle 9s var(--ease) both}.hero-copy{animation:hero-copy-in 1.2s .5s var(--ease) both}@keyframes hero-settle{from{transform:scale(1.05)}to{transform:scale(1)}}@keyframes hero-copy-in{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}}.hero-photo figcaption{right:95px}@media(max-width:760px){.hero-photo figcaption{left:24px;right:auto;bottom:18px;font-size:7px}}
+
+/* Seções amplas no desktop; altura livre para conteúdos maiores. */
+@media(min-width:1024px){
+  .section{min-height:110svh;padding-top:clamp(110px,12svh,180px);padding-bottom:clamp(110px,12svh,180px)}
+  .hero{min-height:100svh;padding-top:165px;padding-bottom:125px}
+  .services,.process{display:flex;flex-direction:column;justify-content:center;align-items:stretch;gap:0}
+  .section h2{font-size:clamp(3.5rem,5.2vw,5.8rem)}
+  .final-cta h2{font-size:clamp(4rem,6.3vw,6.5rem)}
+  .section-text{font-size:18px;line-height:1.85}
+  .about-photo img{height:clamp(550px,65svh,760px)}
+  .service{min-height:350px}
+  .service-photo img{height:clamp(220px,26svh,320px)}
+  .service h3{font-size:24px}.service p{font-size:15px}
+  .care-list article{padding:38px 0}.care-list h3{font-size:26px}.care-list p{font-size:16px}
+  .steps{margin-top:70px;gap:36px}.steps h3{font-size:24px}.steps p{font-size:16px}
+  .steps article>span{font-size:58px;margin-bottom:38px}
+  .faq summary{font-size:18px}.faq details{padding:26px 0}.faq details p{font-size:16px}
+}
+@media(min-width:761px) and (max-width:1023px){.section{min-height:100svh}.services,.process{display:flex;flex-direction:column;justify-content:center;align-items:stretch;gap:0}}
+/* Animation légère et progressive: titres, cartes, images et actions. */
+.motion .reveal{transition:opacity .85s var(--ease),transform .85s var(--ease);transition-delay:var(--reveal-delay,0ms);transform:translateY(32px)}
+.motion .reveal.visible{transform:none}
+.title-word{display:inline-block}
+.motion .animated-title .title-word{opacity:0;transform:translateY(24px);transition:opacity .7s var(--ease),transform .85s var(--ease);transition-delay:var(--word-delay,0ms)}
+.motion .animated-title.visible .title-word{opacity:1;transform:none}
+.about-photo{overflow:clip}.about-photo:before{z-index:2;top:0;left:0}
+.about-photo img,.work-photo img{transition:transform 1.2s var(--ease)}
+@media(hover:hover) and (pointer:fine){.about-photo:hover img,.work-visual:hover .work-photo img{transform:scale(1.04)}}
+.work-photo{overflow:hidden}
+.button{position:relative;overflow:hidden;transition:transform .3s var(--ease),box-shadow .3s,background .3s}
+.button:before{content:'';position:absolute;inset:0;transform:translateX(-115%) skewX(-18deg);background:linear-gradient(90deg,transparent,#ffffff30,transparent);pointer-events:none}
+.button:hover:before{transform:translateX(115%);transition:transform .65s ease}
+.button .arrow-icon,.service-link .arrow-icon,.text-link .arrow-icon{transition:transform .3s var(--ease)}
+.button:hover .arrow-icon,.service-link:hover .arrow-icon,.text-link:hover .arrow-icon{transform:translate(2px,-2px)}
+.service .card-top svg{transition:transform .35s var(--ease)}
+.service:hover .card-top svg{transform:translateY(-3px) rotate(-5deg)}
+.steps article{transition:background .3s,transform .3s}
+@media(hover:hover){.steps article:hover{transform:translateY(-5px)}}
+.reading-progress{position:absolute;left:0;bottom:-1px;width:100%;height:2px;background:var(--blue);transform-origin:left;pointer-events:none}
+@media(prefers-reduced-motion:no-preference){.scroll-cue>span{animation:scroll-nudge 2.6s ease-in-out infinite}.final-cta:after{animation:cta-orbit 18s ease-in-out infinite alternate}@keyframes scroll-nudge{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}@keyframes cta-orbit{from{transform:translate(0,0)}to{transform:translate(-35px,-25px)}}}
+@media(prefers-reduced-motion:reduce){.title-word,.motion .animated-title .title-word{opacity:1;transform:none}.about-photo:hover img,.work-visual:hover .work-photo img,.steps article:hover{transform:none}.button:before{display:none}}
+@media(max-width:760px){.section:not(.hero){min-height:auto}.title-word{max-width:100%}.motion .reveal{transform:translateY(20px)}}
